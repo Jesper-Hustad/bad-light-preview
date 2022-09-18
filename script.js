@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.onpaste = function(event) {
         const items = (event.clipboardData || event.originalEvent.clipboardData).items
         for (let index in items) {
-            if (items[index].kind === 'file') loadImage(item.getAsFile())
+            if (items[index].kind === 'file') loadImage(items[index].getAsFile())
         }
     }
 })
