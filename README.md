@@ -1,7 +1,7 @@
 # Bad lighting preview
 A simple online tool to preview prints in bad lightning conditions. This is achieved by adding a couple effects: `color curve`, `blur`, `noise`, and `wave distort`.  
 
-[![](example.jpg)](https://jesper-hustad.github.io/bad-light-preview/)
+[![](example.png)](https://jesper-hustad.github.io/bad-light-preview/)
 Access the site by clicking the image or [here](https://jesper-hustad.github.io/bad-light-preview/)
 
 ## Issues
