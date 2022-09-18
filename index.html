@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Preview print</title>
 </head>
 
 <body>
@@ -18,7 +18,6 @@
                 <p>
                     This is a small tool for previewing your print in bad lighting conditions.
                     <br>If you can't read the text there is probably not enough contrast.
-                    <!-- <br> Upload the image by selecting a file, dropping it in the box or by pasting it from your clipboard. -->
 
                 </p>
                 <br>
@@ -33,7 +32,6 @@
             </div>
 
             <div class="column" id="canvas-container" style="display: none;">
-
                 <div class="canvas">
                     <canvas id="Canvas" class="canvas_styles"></canvas>
                 </div>
@@ -42,25 +40,13 @@
         </div>
     </div>
 
-    <!-- absolute positioned help button in bottom right corner  -->
-    <!-- <div class="help-button">
-        
-    </div> -->
 
     <button class="help-button" id="help-on">?</button>
 
     <button class="back-button" id="back-on" onclick="location.reload();">Back to upload page</button>
 
 
-
-
-    <img style="display:none;" id="SourceImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Brill_windmill_April_2017.jpg/317px-Brill_windmill_April_2017.jpg" crossorigin="Anonymous">
-
-    <!-- button to upload file that get's displayed -->
-    <!-- <input type="file" id="file" name="file" accept="image/*" onchange="loadFile(event)"> -->
-
-
-
+    <img style="display:none;" id="SourceImage">
 
     <div id="overlay" style="display: none;">
         <div id="text">
@@ -69,26 +55,24 @@
             <br>
             <p>
                 This is a small tool for previewing your print in bad lighting conditions.
-                <!-- <br> Upload the image by selecting a file, dropping it in the box or by pasting it from your clipboard. -->
-
-                <br><br>
-                <h3>How to use</h3>
-                <p>
-                    If you can not read the text in your print it's probably not enough contrast between the text and the background.
-                </p>
-
-                <br>
-                <p>
-                    Color sensitivity in the human eye is weakest in the blue part of the spectrum. Blue backgrounds will therefore be harder to read in darker conditions.
-                </p>
-                <br>
-                <img src="Eyesensitivity.svg" style="width: 65%; border: white 2px solid">
-                <br><small><a style="color: rgb(184, 210, 255);" href="https://en.wikipedia.org/wiki/Color_vision">Wikipedia</a>: Color vision Photopic relative brightness sensitivity </small>
-
-                <br><br>
-                <h3>Report bugs</h3>
-                <p>Code and posting issues available on <a style="color: rgb(184, 210, 255);" href="https://github.com/Jesper-Hustad/bad-light-preview">GitHub</a></p>
             </p>
+            <br><br>
+            <h3>How to use</h3>
+            <p>
+                If you can not read the text in your print it's probably not enough contrast between the text and the background.
+            </p>
+            <br>
+            <p>
+                Color sensitivity in the human eye is weakest in the blue part of the spectrum. Blue backgrounds will therefore be harder to read in darker conditions.
+            </p>
+            <br>
+            <img src="Eyesensitivity.svg" style="width: 65%; border: white 2px solid">
+            <br>
+            <small><a style="color: rgb(184, 210, 255);" href="https://en.wikipedia.org/wiki/Color_vision">Wikipedia</a>: Color vision Photopic relative brightness sensitivity</small>
+            <br><br>
+            <h3>Report bugs</h3>
+            <p>Code and posting issues available on <a style="color: rgb(184, 210, 255);" href="https://github.com/Jesper-Hustad/bad-light-preview">GitHub</a></p>
+
         </div>
     </div>
 
@@ -96,362 +80,10 @@
 </body>
 
 
+<script src="script.js"></script>
 
-<script>
-    function loadImage(file) {
-        const image = document.getElementById('SourceImage');
-        image.src = URL.createObjectURL(file);
-        image.addEventListener('load', () => {
-            init()
-        })
-    }
+<link rel="stylesheet" href="style.css">
 
-    // handle paste of image
-    document.addEventListener('DOMContentLoaded', () => {
-        document.onpaste = function(event) {
-            const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-            for (let index in items) {
-                const item = items[index];
-                if (item.kind === 'file') {
-                    loadImage(item.getAsFile())
-                }
-            }
-        }
-    });
-
-
-    // handle drag and drop of image
-    function dropHandler(ev) {
-        ev.preventDefault();
-        loadImage(ev.dataTransfer.files[0])
-    }
-
-    function dragOverHandler(ev) {
-        ev.preventDefault();
-    }
-
-
-
-    const dropArea = document.querySelector(".container"),
-        button = dropArea.querySelector("button"),
-        input = dropArea.querySelector("input");
-
-    let file;
-    var filename;
-
-    // clicks DOM input element
-    button.onclick = () => {
-        input.click()
-    };
-
-    // on file select
-    input.addEventListener("change", function(event) {
-        loadImage(event.target.files[0])
-    });
-
-    var canvas;
-    var context;
-
-    async function loadFile(event) {
-        loadImage(event.target.files[0])
-    };
-
-
-    async function init() {
-        const image = document.getElementById('SourceImage');
-        canvas = document.getElementById('Canvas');
-        context = canvas.getContext('2d');
-
-        // Set the canvas the same width and height of the image
-        canvas.width = image.width;
-        canvas.height = image.height;
-
-        context.drawImage(image, 0, 0);
-
-        var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-        distortCanvasImage(imageData.data);
-        effectAddNoise(imageData.data);
-        effectColorCurve(imageData.data);
-        context.putImageData(imageData, 0, 0);
-
-        // calculate image aspact ratio
-        var aspectRatio = canvas.width / canvas.height;
-
-        // calculate html document aspect ratio
-        var documentAspectRatio = document.documentElement.clientWidth / document.documentElement.clientHeight;
-
-
-
-        if (aspectRatio < documentAspectRatio) {
-            canvas.style.height = "90vh";
-        } else {
-            canvas.style.width = "95vw";
-        }
-
-
-        // remove card-picker class from class element
-        document.querySelector('.card').classList.remove('card-picker');
-
-        document.getElementById("upload-text").style.display = "none";
-        document.getElementById("canvas-container").style.display = "block";
-
-    }
-
-
-    function distortCanvasImage(data) {
-
-        function setPixel(x, y, data, rgba) {
-            var index = (x + y * canvas.width) * 4;
-            data[index + 0] = rgba[0];
-            data[index + 1] = rgba[1];
-            data[index + 2] = rgba[2];
-            data[index + 3] = rgba[3];
-        }
-
-        function getPixel(x, y, data) {
-            var index = (x + y * canvas.width) * 4;
-            return [data[index + 0], data[index + 1], data[index + 2], data[index + 3]];
-        }
-
-        for (var y = 0; y < canvas.height; y++) {
-            for (var x = 0; x < canvas.width; x++) {
-
-                const frequency = 0.1;
-                const amplitude = 2;
-                let offset = Math.round((Math.round(amplitude * Math.sin(x * frequency)) + amplitude) * 0.3);
-                let offsetY = Math.round((Math.round(amplitude * Math.sin(y * frequency)) + amplitude) * 0.3);
-
-                var pixel = getPixel(x, y + offset, data);
-                setPixel(x, y, data, pixel);
-            }
-        }
-    }
-
-    function effectAddNoise(data) {
-        const strength = 40
-        for (var i = 0; i < data.length; i += 4) {
-            data[i + 0] = data[i + 0] + Math.random() * strength;
-            data[i + 1] = data[i + 1] + Math.random() * strength;
-            data[i + 2] = data[i + 2] + Math.random() * strength;
-        }
-    }
-
-    function effectColorCurve(data) {
-
-        function curveFunction(x) {
-            return x * 0.8 + 0.2 * Math.pow(x - 1, 2) - 0.2
-        }
-
-        for (var i = 0; i < data.length; i += 4) {
-            const avgBrightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-            const normalized = avgBrightness / 255;
-            const curve = curveFunction(normalized);
-            const newBrightness = curve * 255;
-
-            const difference = newBrightness / avgBrightness;
-
-            // apply difference to current pixel
-            data[i + 0] *= difference * 0.95;
-            data[i + 1] *= difference * 1;
-            data[i + 2] *= difference * 0.9;
-        }
-    }
-
-
-    // window.addEventListener('load', init);
-    const overlay = document.getElementById('overlay')
-    document.getElementById('help-on').addEventListener('click', () => overlay.style.display = "block")
-    document.getElementById('overlay').addEventListener('click', () => overlay.style.display = "none")
-</script>
-
-
-<style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-    }
-    
-    html {
-        background-color: #454545;
-    }
-    
-    .highlight {
-        background-color: #d2e3ee !important;
-    }
-    
-    .help-button {
-        padding: 5px;
-        font-size: 40px;
-        position: absolute;
-        right: 1rem;
-        bottom: 1rem;
-        height: 4rem;
-        width: 4rem;
-        font-weight: 600;
-        border-radius: 3rem;
-        line-height: 0px;
-        background-color: #2d2d2d;
-        color: white;
-        border: white 2px solid;
-        font-family: Georgia, 'Times New Roman', Times, serif;
-    }
-    
-    .back-button {
-        position: fixed;
-        left: 50%;
-        bottom: -14px;
-        transform: translate(-50%, -50%);
-        /* margin: 0 auto; */
-        /* left: 1rem;
-        bottom: 1rem; */
-        padding: 2px;
-        font-size: 20px;
-        height: 2.6rem;
-        width: 16rem;
-        font-weight: 500;
-        border-radius: 1rem;
-        line-height: 0px;
-        background-color: #2d2d2d;
-        color: white;
-        border: rgb(126, 126, 126) 1px solid;
-        font-family: Georgia, 'Times New Roman', Times, serif;
-    }
-    
-    .back-button:hover {
-        border: rgb(187, 187, 187) 2px solid;
-    }
-    
-    .help-button:hover {
-        /* background-color: #363636; */
-        border: gray 3px solid;
-        color: rgb(216, 216, 216);
-    }
-    
-    .card-picker {
-        border-radius: 10px;
-        box-shadow: 0 5px 10px 0 rgb(0 0 0 / 30%);
-        width: 650px;
-        /* height: 260px; */
-        background-color: #ffffff;
-        padding: 10px 30px 40px;
-    }
-    
-    .canvas_styles {
-        filter: blur(0.6px);
-        display: block;
-    }
-    
-    .container {
-        height: 100vh;
-        width: 100%;
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    }
-    
-    .card {
-        /* border-radius: 10px; */
-        /* box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3); */
-        /* width: 600px; */
-        /* height: 260px; */
-        /* background-color: #ffffff; */
-        /* padding: 5px 10px 10px; */
-    }
-    
-    .card h3 {
-        font-size: 22px;
-        font-weight: 600;
-    }
-    
-    .drop_box {
-        margin: 10px 0;
-        padding: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        border: 3px dotted #a3a3a3;
-        border-radius: 5px;
-    }
-    
-    .drop_box h4 {
-        font-size: 16px;
-        font-weight: 400;
-        color: #2e2e2e;
-    }
-    
-    .drop_box p {
-        margin-top: 10px;
-        margin-bottom: 20px;
-        font-size: 12px;
-        color: #a3a3a3;
-    }
-    
-    .btn {
-        text-decoration: none;
-        background-color: #005af0;
-        color: #ffffff;
-        padding: 10px 20px;
-        border: none;
-        outline: none;
-        transition: 0.3s;
-    }
-    
-    .btn:hover {
-        text-decoration: none;
-        background-color: #ffffff;
-        color: #005af0;
-        padding: 10px 20px;
-        border: none;
-        outline: 1px solid #010101;
-    }
-    
-    .form input {
-        margin: 10px 0;
-        width: 100%;
-        background-color: #e2e2e2;
-        border: none;
-        outline: none;
-        padding: 12px 20px;
-        border-radius: 4px;
-    }
-    
-    #overlay {
-        position: fixed;
-        display: none;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 2;
-        cursor: pointer;
-    }
-    
-    #text {
-        width: 45em;
-        height: 80%;
-        padding: 4em;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        font-size: 1em;
-        color: white;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        background-color: rgb(24, 24, 24);
-        font-family: Arial, Helvetica, sans-serif;
-        overflow: auto;
-        border-radius: 1rem;
-    }
-</style>
 
 <!-- simple visit counter, as no info is provided by static hosting on GitHub -->
 <!-- access all info gathered available here https://jesper-hustad.goatcounter.com/count -->
