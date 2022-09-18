@@ -17,7 +17,8 @@
                 <h3>Preview in bad lighting</h3>
                 <p>
                     This is a small tool for previewing your print in bad lighting conditions.
-                    <br> Upload the image by selecting a file, dropping it in the box or by pasting it from your clipboard.
+                    <br>If you can't read the text there is probably not enough contrast.
+                    <!-- <br> Upload the image by selecting a file, dropping it in the box or by pasting it from your clipboard. -->
 
                 </p>
                 <br>
@@ -48,6 +49,8 @@
 
     <button class="help-button" id="help-on">?</button>
 
+    <button class="back-button" id="back-on" onclick="location.reload();">Back to upload page</button>
+
 
 
 
@@ -66,12 +69,12 @@
             <br>
             <p>
                 This is a small tool for previewing your print in bad lighting conditions.
-                <br> Upload the image by selecting a file, dropping it in the box or by pasting it from your clipboard.
+                <!-- <br> Upload the image by selecting a file, dropping it in the box or by pasting it from your clipboard. -->
 
                 <br><br>
                 <h3>How to use</h3>
                 <p>
-                    If you can not read the text displayed it's probably not enough contrast between the text and the background.
+                    If you can not read the text in your print it's probably not enough contrast between the text and the background.
                 </p>
 
                 <br>
@@ -296,6 +299,31 @@
         color: white;
         border: white 2px solid;
         font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    
+    .back-button {
+        position: fixed;
+        left: 50%;
+        bottom: -14px;
+        transform: translate(-50%, -50%);
+        /* margin: 0 auto; */
+        /* left: 1rem;
+        bottom: 1rem; */
+        padding: 2px;
+        font-size: 20px;
+        height: 2.6rem;
+        width: 16rem;
+        font-weight: 500;
+        border-radius: 1rem;
+        line-height: 0px;
+        background-color: #2d2d2d;
+        color: white;
+        border: rgb(126, 126, 126) 1px solid;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+    
+    .back-button:hover {
+        border: rgb(187, 187, 187) 2px solid;
     }
     
     .help-button:hover {
