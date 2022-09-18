@@ -17,8 +17,7 @@
                 <h3>Preview in bad lighting</h3>
                 <p>
                     This is a small tool for previewing your print in bad lighting conditions.
-                    <br>If you can't read the text there is probably not enough contrast.
-
+                    <br> If you can't read the text there is probably not enough contrast.
                 </p>
                 <br>
                 <div class="drop_box">
@@ -40,13 +39,6 @@
         </div>
     </div>
 
-
-    <button class="help-button" id="help-on">?</button>
-
-    <button class="back-button" id="back-on" onclick="location.reload();">Back to upload page</button>
-
-
-    <img style="display:none;" id="SourceImage">
 
     <div id="overlay" style="display: none;">
         <div id="text">
@@ -72,7 +64,6 @@
             <br><br>
             <h3>Report bugs</h3>
             <p>Code and posting issues available on <a style="color: rgb(184, 210, 255);" href="https://github.com/Jesper-Hustad/bad-light-preview">GitHub</a></p>
-
         </div>
     </div>
 
@@ -80,6 +71,13 @@
 </body>
 
 
+<!-- absolute position overlay buttons -->
+<button class="help-button" id="help-on">?</button>
+<button class="back-button" id="back-on" onclick="location.reload();" style="display: none;">Back to upload page</button>
+
+<img style="display:none;" id="SourceImage">
+
+<script src="filters.js"></script>
 <script src="script.js"></script>
 
 <link rel="stylesheet" href="style.css">
