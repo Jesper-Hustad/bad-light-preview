@@ -17,5 +17,6 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 
 ## Code of conduct  
 All contributions are welcome no matter previous experience.  
+We strive to give constructive and positive feedback to everyone who contributes.
 Thanks to everyone who helps make this a welcoming project.  
-Striving to give constructive and positive feedback to everyone who contributes.
+
