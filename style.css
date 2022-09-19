@@ -116,6 +116,12 @@ html {
     color: #2e2e2e;
 }
 
+.drop_box h6 {
+   font-size: 12px;
+   font-weight: 400;
+   color: #2e2e2e;
+}
+
 .drop_box p {
     margin-top: 10px;
     margin-bottom: 20px;
