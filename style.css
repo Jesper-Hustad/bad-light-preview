@@ -113,6 +113,14 @@ html {
 .drop_box h4 {
     font-size: 16px;
     font-weight: 400;
+    text-align: center;
+    color: #2e2e2e;
+}
+
+.drop_box h5 {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
     color: #2e2e2e;
 }
 
